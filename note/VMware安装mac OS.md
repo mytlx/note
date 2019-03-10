@@ -4,7 +4,7 @@
 
 1. ### unlocker208
 
-   ![1538836010283](G:\TLX\Documents\MarkDown\blog\unlocker.png)
+   ![unlocker.png](https://i.imgur.com/8ib8mi8.png)
 
    管理员运行**win-install.cmd**文件，之后新建虚拟机时便会出现mac OS选项
 
@@ -12,38 +12,38 @@
 
    在该虚拟机目录下寻找***.vmx**文件，记事本打开，找到`smc.present = "TRUE"`，在此行下面添加`smc.version = "0"`，如下图
 
-   ![1538836503643](G:\TLX\Documents\MarkDown\blog\vmx.png)
+   ![vmx.png](https://i.imgur.com/kG2A2q2.png)
 
 3. 重新启动虚拟机，如果出现下图蓝屏**boot manager**的现象，则是镜像包的问题，**CRD镜像文件**可以成功安装。
 
-   ![1538836789787](G:\TLX\Documents\MarkDown\blog\boot.png)
+   ![boot.png](https://i.imgur.com/igdlY9V.png)
 
 4. 成功启动后显示如下画面，等待安装
 
-   ![1538837965415](G:\TLX\Documents\MarkDown\blog\apple.png)
+   ![apple.png](https://i.imgur.com/hxer63p.png)
 
-   进度条完成后选择语言
+5. 进度条完成后选择语言
 
-   ![1538838202480](G:\TLX\Documents\MarkDown\blog\language.png)
+   ![language.png](https://i.imgur.com/6FJksG3.png)
 
-   选择 实用工具 - 磁盘工具 进行分区
+6. 选择 实用工具 - 磁盘工具 进行分区
 
-   ![1538838345443](G:\TLX\Documents\MarkDown\blog\disk.png)
+   ![disk.png](https://i.imgur.com/K39fgJQ.png)
 
-   选择磁盘，点击抹掉，设置名称，点击抹掉
+7. 选择磁盘，点击抹掉，设置名称，点击抹掉
 
-   ![1538839229331](G:\TLX\Documents\MarkDown\blog\disk_operate.png)
+   ![disk_operate.png](https://i.imgur.com/F2pFhAC.png)
 
-   分区成功
+8. 分区成功
 
-   ![1538839289472](G:\TLX\Documents\MarkDown\blog\disk_success.png)
+   ![disk_success.png](https://i.imgur.com/9LSapVA.png)
 
-   退出磁盘工具，点击继续，同意服务什么的，出现如下画面，将系统装在刚才创建的分区中
+9. 退出磁盘工具，点击继续，同意服务什么的，出现如下画面，将系统装在刚才创建的分区中
 
-   ![1538839494132](G:\TLX\Documents\MarkDown\blog\install.png)
+   ![install.png](https://i.imgur.com/DwvzAJg.png)
 
-   等待系统安装
+10. 等待系统安装，时间会比较长，甚至会卡死
 
-   ![1538839524076](G:\TLX\Documents\MarkDown\blog\install2.png)
+  ![install2.png](https://i.imgur.com/VFXfNGc.png)
 
-   然后我就卡死了。
+  然后就可以了。
