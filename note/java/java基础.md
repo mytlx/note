@@ -343,8 +343,8 @@ birthday是对象变量，new Date() 构造了一个新对象
 
 * 不能向对象实施操作的方法
 * static是类方法，不属于某一个对象
-* 没有this参数，this和super都是指向对象
-* 不能访问实例域，可以访问自身类中的静态域
+* **没有this参数**，this和super都是指向对象
+* 不能访问**实例域**，可以访问自身类中的**静态域**
 * 使用类名调用方法，也可以使用类下对象调用，但是不建议
 * 使用静态方法的情况
   * 一个方法不需要访问对象状态，所需参数都是通过显示参数提供
@@ -646,7 +646,7 @@ int n = list.get(i).intValue();
 
 ---
 
-
+# java高级
 
 ## 接口
 
@@ -701,4 +701,488 @@ int n = list.get(i).intValue();
    * 如果至少有一个接口提供了一个实现，编译器就会报错
 
 
+
+### 对象克隆
+
+* clone方法是Object的一个protected方法
+
+  * 子类只能调用受保护的clone方法来克隆它自己的对象
+  * 必须重新定义clone为**public**才能允许所有方法克隆对象
+
+* 默认的克隆操作是“浅拷贝”，不拷贝引用
+
+* Cloneable接口是Java提供的一组**标记接口（tagging interface）**，或叫**记号接口（marker interface）**
+
+  * 标记接口不包含任何方法，唯一的作用就是允许在类型查询汇总使用instanceof
+
+* java se 1.4之前，clone的方法返回类型总是Object，而现在可以为clone方法指定正确的返回类型，这是协变返回类型的一个例子
+
+  ```java
+  class Employee implements Cloneable{
+      // raise visibility level to public, change return type
+      public Employee clone() throws CloneNotSupportedException{
+          return (Employee)super.clone();
+  	}
+      // ...
+  }
+  ```
+
+* 如果在一个对象上调用clone，但这个对象的类并没有实现Cloneable接口，Object类的clone方法就会抛出一个CloneNotSupportedException
+
+* 所有数组类型都有一个public的clone方法，可以用这个方法建立一个新数组，包含原数组所有元素的副本
+
+* 在拷贝一个对象时，要想让这个拷贝的对象和源对象完全彼此独立，那么在引用链上的每一级对象都要被显式的拷贝
+
+
+
+## lambda表达式
+
+* java中不能直接传递代码段，必须构造一个对象，对象的类需要有一个方法包含所需的代码
+
+* lambda表达式是一个可传递的代码块，可以在以后执行一次或多次
+
+* lambda表达式就是一个代码块，以及必须传入代码的变量规范
+
+* lambda表达式的一种形式：参数，箭头（->）以及一个表达式，如果代码无法放在一个表达式中，可以放在{}中，并包含显式的return语句
+
+  ```java
+  (String first, String second) ->{
+      if (first.length() < second.length()) return -1;
+      else if (first.length() > second.length()) return 1;
+      else return 0;
+  }
+  ```
+
+* 即使lambda表达式没有参数，仍然要提供空括号，就像无参方法一样
+
+  ```java
+  () -> {
+      for (int i = 100; i >= 0; i--)
+      	System.out.println(i);
+  }
+  ```
+
+* 如果可以推导出一个lambda表达式的参数类型，则可以忽略其类型
+
+  ```java
+  Comparator<String> comp = (first, second)	// same as (String f, String s)
+  	-> first.length() - second.length();
+  ```
+
+* 如果方法只有一个参数，并且这个参数的类型可以推导得出，那么可以省略小括号
+
+  ```java
+  ActionListener listener = event ->
+  	System.out.println("The time is " + new Date());
+  ```
+
+* 无需指定lambda表达式的返回类型，返回类型总是会由上下文推导得出
+
+* lambda表达式各分支必须都有返回值
+
+  ```java
+  (int x) -> {	
+      if (x > 0)		// 不合法
+      	return 1;
+  }
+  ```
+
+### 函数式接口
+
+* 对于只有一个抽象方法的接口，需要这种接口的对象时，就可以提供一个lambda表达式，这种接口称为**函数式接口（functional interface）**  
+
+### 方法引用（method reference）
+
+```java
+Timer t = new Timer(1000, event -> System.out.println(event));
+
+Timer t = new Timer(1000, System.out::println);	// 方法引用，等价于lambda表达式
+```
+
+用::操作符分隔方法名与对象或类名，主要有三种情况：
+
+1. object::instanceMethod（object实例方法）
+   * 等价于提供方法参数的lambda表达式
+   * `System.out::println`等价于``x -> System.out.println(x)``
+2. Class::staticMethod（静态方法）
+   * 等价于提供方法参数的lambda表达式
+   * `Math::pow`等价于``(x, y) -> Math.pow(x, y)``
+3. Class::instanceMethod（普通实例方法）
+   * 第一个参数会成为方法的目标
+   * `String::compareToIgnoreCase`等价于`(x, y) -> x.compareToIgnoreCase(y)`
+
+* 如果有多个同名的重载方法，编译器就会尝试从上下文中找出你指的那一个方法
+
+* 类似于lambda表达式，方法引用不能独立存在，总是会转换为函数式接口的实例
+
+* 可以在方法引用中使用this参数，`this::equals`等同于`x -> this.equals(x)`
+
+* 使用super也是合法的
+
+  * `super::instanceMethod` 使用this作为目标，会调用给定方法的超类版本
+
+    ```java
+    class Greeter{
+        public void greet(){
+            System.out.println("Hello World!");
+        }
+    }
+    
+    class TimedGreeter extends Greeter{
+        public void greet(){
+            Timer t = new Timer（1000, super::greet); // 调用超类中greet方法
+            t.start();
+        }
+    }
+    ```
+
+### 构造器引用
+
+* 构造器引用和方法引用很类似，只不过方法名为new
+  * Person::new是Person构造器的一个引用
+* 可以用数组类型建立构造器引用
+  * int[]::new是一个构造器引用，有一个参数：数组的长度，等价于lambda表达式`x -> new int[x] `
+
+### 变量作用域
+
+* 在lambda表达式中访问外围方法或类中的变量
+
+  ```java
+  public static void repeatMessage(String text, int delay){
+      ActioinListener listener = event ->{
+          System.out.println(text);
+          Toolkit.getDefaultToolkit().beep();
+      };
+      new Timer(delay, listener).start();
+  }
+  ```
+
+* lambda表达式三个部分
+
+  1. 一个代码块
+  2. 参数
+  3. 自由变量的值，指非参数而且不在代码中定义的变量
+
+* 上例有一个自由变量text，表示lambda表达式的数据结构必须存储自由变量的值，说它被lambda表达式**捕获**
+
+* lambda表达式可以捕获外围作用域中变量的值
+
+* lambda表达式中，只能引用**值不会改变**的变量
+
+  ```java
+  public static void countDown(int start, int delay){
+      ActionListener listener = event -> {
+          start--;	// Error: Can't mutate captured variable
+          System.out.println(start);
+      };
+      new Timer(delay, listener).start();
+  }
+  ```
+
+* 如果在lambda表达式中改变变量，并发执行多个动作时就会不安全
+
+* 如果在lambda表达式中引用变量，而这个变量可能在外部改变，也是不合法的
+
+  ```java
+  public static void repeat(String text, int count){
+      for (int i = 1; i <= count; i++){
+          ActionListener listener = event -> {
+              System.out.println(i + text); // Error: Can't refer to changing i
+          };
+          new Timer(1000, listener).start();
+      }
+  }
+  ```
+
+* lambda表达式中捕获的变量必须实际上是**最终变量（effectively final）**
+
+  * 指变量初始化后不会再为它赋新值
+  * text总是指向同一个String对象，所以捕获合法
+
+* lambda表达式的体与嵌套块有相同的作用域
+
+* 在lambda表达式中声明一个局部变量同名的参数或局部变量是不合法的
+
+  ```java
+  Path first = Paths.get("/usr/bin");
+  Comparator<String> comp = (first, second) -> first.length() - second.length();
+  // Error: Variable first already defined
+  ```
+
+* lambda表达式中不能有同名的局部变量
+
+* 在lambda表达式中使用this关键字时，指创建这个lambda表达式的方法的this参数
+
+  ```java
+  public class Application(){
+      public void init(){
+          ActionListener listener = event -> {
+              System.out.println(this.toString());
+          }
+      }
+  }
+  ```
+
+* lambda由Application创建，所以，this指向Application，调用Application对象的toString方法
+
+
+
+## 内部类
+
+> **内部类（inner class）**：定义在另一个类中的类
+
+内部类的作用：
+
+* 内部类的方法可以**访问**该类定义所在的作用域中的**数据**，包括私有数据
+* 内部类可以对同一个包中的其他类**隐藏**起来
+* 当想要定义一个**回调函数**且不想编写大量代码时，使用**匿名内部类**比较便捷
+
+### 使用内部类访问对象状态
+
+```java
+package core;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Date;
+
+/**
+ * Created by IntelliJ IDEA.
+ * User: TLX
+ * Date: 2019.3.12
+ * Time: 12:18
+ */
+class TalkingClock {
+    private int interval;
+    private boolean beep;
+
+    public TalkingClock(int interval, boolean beep) {
+        this.interval = interval;
+        this.beep = beep;
+    }
+
+    public void start() {
+        ActionListener listener = new TimePrinter();
+        Timer t = new Timer(interval, listener);
+        t.start();
+    }
+
+    // an inner class
+    public class TimePrinter implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            System.out.println("At the tone, the time is " + new Date());
+            if (beep) {	// 外围类的数据域
+                Toolkit.getDefaultToolkit().beep();
+            }
+        }
+    }
+}
+
+public class InnerClassTest {
+    public static void main(String[] args) {
+        TalkingClock clock = new TalkingClock(1000, true);
+        clock.start();
+
+        JOptionPane.showMessageDialog(null, "Quit program?");
+        System.exit(0);
+    }
+}
+
+```
+
+* 内部类既可以访问**自身的数据域**，也可以访问创建它的**外围类对象的数据域**
+
+* 内部类对象总有一个**隐式引用**，指向了**创建它的外部类对象**
+
+  * 这个引用在内部类的定义中是不可见的
+
+  * 外围类的引用在构造器中设置，编译器修改了所有的内部类的构造器，添加一个外围类引用的参数
+
+    ```java
+    public TimePrinter(TalkingClock clock){
+        outer = clock; // outer不是java关键字，只是用它说明机制
+    }
+    ```
+
+* 只有内部类可以是私有类，而常规类只可以具有**包可见性（default）**或**公有可见性（public）**，不可被private和protected修饰
+
+内部类的特殊语法规则
+
+内部类的特殊语法规则
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### 内部类的特殊语法规则
+
+* 外围类引用：`OuterClass.this`
+
+  ```java
+  public void actionPerformed(ActionEvent event){
+      // ...
+      if (TalkingClock.this.beep)
+      	Toolkit.getDefaultToolkit().beep();
+  }
+  ```
+
+* 编写内部对象的构造器：`outerObject.new InnerClass(construction parameters)`
+
+  ```java
+  ActionListener listener = this.new TimePrinter();
+  ```
+
+* 在外围类的作用域之外，可以这样引用内部类：`OuterClass.InnerClass`
+
+* 内部类中声明的所有静态域都必须是final
+
+  * 我们希望一个静态域只有一个实例，不过对于每个外部对象，会分别有一个单独的内部类实例，如果这个域不是final，它可能不是唯一的
+
+* 内部类不能有static方法
+
+### 内部类是否有用、必要和安全
+
+* 内部类是一种编译器现象，与虚拟机无关，编译器会把内部类翻译成用**$**分隔外部类名与内部类名的常规类文件，而虚拟机对此一无所知
+
+  * 在TalkingClock类内部的TimePrinter类将被翻译成类文件**TalkingClock$TimePrinter.class**
+
+* 测试是否可以自己实现这种机制
+
+  ```java
+  class TalkingClock{
+      public void start(){
+          ActionListener listener = new TimePrinter(this); // 创建对象时传递this指针
+          Timer t = new Timer(interval, listener);
+          t.start();
+      }
+  }
+  class TimePrinter implements ActionListener{
+      private TalkingClock outer;
+      // 模拟内部类的构造函数，将创建该对象的this指针传递给它
+      public TimePrinter(TalkingClock clock){
+          outer = clock;
+      }
+  }
+  ```
+
+  ```java
+  if (outer.beep)		// error
+  ```
+
+* 内部类可以访问**外围类的私有数据**，但是这里TimePrinter类则不行
+
+* 编译器在外围类添加静态方法access$0
+
+  ```java
+  class TalkingClock{
+      private int interval;
+      private boolean beep;
+      
+      public TalkingClock(int, boolean);
+      
+      static boolean access$0(TalkingClock);	// 返回传递给它的对象域的beep
+      
+      public void start();
+  }
+  ```
+
+### 局部内部类
+
+* TimePrinter这个类名只在start方法中创建这个类型的对象时使用了一次，可以在一个方法中定义**局部类**
+
+  ```java
+  public void start(){
+      class TimePrinter implements ActionListener{
+          System.out.println("At the tone, the time is " + new Date());
+          if (beep)
+          	Toolkit.getDefaultToolkit().beep();
+      }
+      
+      ActionListener listener = new TimePrinter();
+      Timer t = new Timer(interval, listener);
+      t.start();
+  }
+  ```
+
+* 局部类不能用public或private进行声明，它的作用域被限定在声明这个局部类的块中
+
+* 局部类可以对外部完全的隐藏起来，上面代码中，除了start方法外，没有任何方法知道这个类的存在
+
+### 匿名内部类
+
+* 如果只创建这个类的一个对象，就不必命名了，这种类称为**匿名内部类（anonymous inner class）**
+
+  ```java
+  public void start(int interval, boolean beep){
+      ActionListener listener = new ActionListener(){
+          System.out.println("At the tone, the time is " + new Date());
+          if (beep)
+          	Toolkit.getDefaultToolkit().beep();
+      }
+      Timer t = new Timer(interval, listener);
+      t.start();
+  }
+  ```
+
+* 通常的语法格式
+
+  ```java
+  new SuperType(construction parameters){
+      inner class methods and data
+  }
+  ```
+
+* SuperType可以是接口，内部类实现这个接口，也可以是一个类，内部类扩展这个类
+
+* 由于构造器的名字必须和类名相同，而匿名类没有类名，所以，**匿名类不能有构造器**，取而代之的是，将构造器参数传递给超类构造器
+
+* **双括号初始化（double brace initialization）**
+
+  ```java
+  ArrayList<String> friends = new ArrayList<>();
+  friends.add("Harry");
+  friends.add("Tony");
+  invite(friends);
+  ```
+
+* 可以简化为
+
+  ```java
+  invite(new ArrayList<String>(){
+      {
+          add("Harry");
+          add("Tony");
+      }
+  })
+  ```
+
+* 外层括号建立了ArrayList的一个匿名子类，内层括号则是一个对象构造块
+
+### 静态内部类
+
+* 将内部类声明为static，可以取消内部类对外围类对象的引用
+* 只有内部类可以声明为static
+* 静态内部类的对象除了没有对生成它的外围类对象的引用外，与其他内部类完全一样
+* 在内部类**不需要访问外围类对象**的时候，应该使用静态内部类，有些程序员用**嵌套类（nested class）**表示静态内部类
+* 与常规内部类不同，静态内部类可以有**静态域和方法**
+* 声明在**接口**中的内部类自动成为**static和public类**
 
