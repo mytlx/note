@@ -53,7 +53,7 @@ $$ \qquad\color{red}{\pm d.dd···d \times\beta ^e (0 \leq d_i < \beta)}$$
 
 拿单精度数为例，按照上面所介绍的知识，实际上**可以用 23 位长的有效数字来表达 24 位的有效数字**。
 
-比如，对单精度数而言，二进制的 1001.101（即十进制的 9.625）可以表达为 1.001101×23，所以实际保存在有效数字位中的值为：$001\,1010\,0000\,0000\,0000\,0000​$，即**去掉小数点左侧的 1，并用 0 在右侧补齐**。
+比如，对单精度数而言，二进制的 1001.101（即十进制的 9.625）可以表达为 1.001101×23，所以实际保存在有效数字位中的值为：$001\,1010\,0000\,0000\,0000\,0000$，即**去掉小数点左侧的 1，并用 0 在右侧补齐**。
 
 将-9.625转换为单精度浮点数格式的步骤：
 
@@ -84,7 +84,7 @@ IEEE 754标准准确地定义了单精度和双精度浮点格式，并为这两
 
 单精度浮点数格式共32位，其中，s、exp、frac段分别占1bit，8bits，23bits
 
-![32位.png](G:\TLX\Documents\MarkDown\note\java\img\32位.png)
+![32位.png](https://github.com/mytlx/note/blob/master/note/java/img/32%E4%BD%8D.png?raw=true)
 
 其中，32 位中的第 0 位存放小数段 frac 的最低有效位 LSB（least significant bit），第 22 位存放小数段 frac 的最高有效位 MSB（most significant bit）；第 23 位存放指数段 exp 的最低有效位 LSB，第 30 位存放指数段 exp 的最高有效位 MSB；最高位，即第 31 位存放符号 s。
 
@@ -92,7 +92,7 @@ IEEE 754标准准确地定义了单精度和双精度浮点格式，并为这两
 
 双精度浮点格式共 64 位，其中，s、exp、frac 段分别占1bit，11bits，52bits
 
-![64位.png](G:\TLX\Documents\MarkDown\note\java\img\64位.png)
+![64位.png](https://github.com/mytlx/note/blob/master/note/java/img/64%E4%BD%8D.png?raw=true)
 
 其中，frac[31：0] 存放小数段的低 32 位（即第 0 位存放整个小数段的最低有效位 LSB，第 31 位存放小数段低 32 位的最高有效位 MSB）；frac[51：32] 存放小数段的高 20 位（即第 32 位存放高 20 位的最低有效位 LSB，第 51 位存放整个小数段的最高有效位 MSB）；第 52 位存放指数段 exp 的最低有效位 LSB，第 62 位存放指数段 exp 的最高有效位 MSB；最高位，即第 63 位存放符号 s。
 
