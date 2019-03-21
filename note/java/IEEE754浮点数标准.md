@@ -123,7 +123,7 @@ $x-y$ **不清零**，而改为由反向规格化数$0.6\times10^{-98}$来表示
 
 格式化值和非格式化值所能表达的范围如下:
 
-![格式化和非格式化范围.png](.\img\格式化和非格式化范围.png)
+![格式化和非格式化范围.png](https://github.com/mytlx/note/blob/master/note/java/img/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%92%8C%E9%9D%9E%E6%A0%BC%E5%BC%8F%E5%8C%96%E8%8C%83%E5%9B%B4.png?raw=true)
 
 
 
