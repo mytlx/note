@@ -80,7 +80,7 @@ java迭代器查找操作与位置变更是紧密相连的，查找一个元素�
 
 java迭代器位于两个元素之间，当调用next时，迭代器就越过下一个元素，并返回刚刚越过的那个元素的引用
 
-![向前移动迭代器.png](.\img\向前移动迭代器.png)
+![向前移动迭代器.png](https://github.com/mytlx/note/blob/f16855e5c6255bbedbe558f4eda530900bf07628/note/java/img/%E5%90%91%E5%89%8D%E7%A7%BB%E5%8A%A8%E8%BF%AD%E4%BB%A3%E5%99%A8.png?raw=true)
 
 
 
