@@ -242,35 +242,238 @@ public class CglibProxy implements MethodInterceptor {
 
 ### Spring的AOP简介
 
-AOP思想最早是由AOP联盟组织提出的。
+* AOP思想最早是由AOP联盟组织提出的。
 
-Spring是使用这种思想最好的框架。
+* Spring是使用这种思想最好的框架。
+  * Spring的AOP有自己实现的方式（非常繁琐）
+  * AspectJ是一个AOP的框架，Spring引入AspectJ作为自身的AOP开发
 
-* Spring的AOP有自己实现的方式（非常繁琐）
-* AspectJ是一个AOP的框架，Spring引入AspectJ作为自身的AOP开发
+* Spring两套AOP开发方式
+  * Spring传统方式（弃用）
+  * Spring基于AspectJ的AOP开发
 
-Spring两套AOP开发方式
+### AOP开发中的相关术语
 
-* Spring传统方式（弃用）
-* Spring基于AspectJ的AOP开发
+* Joinpoint：连接点，可以被拦截到的点
+
+  * 增删改查的方法可以被增强，这些方法可以称为连接点
+
+* Pointcut：切入点，真正被拦截到的点
+
+  * 在实际开发中，只有save进行方法的增强，save称为切入点
+
+* Advice：通知，增强
+
+  * 方法层面的增强
+  * 现在对save方法进行权限校验，权限校验的方法称为通知
+
+* Introduction：引介
+
+  * 类层面的增强
+
+* Target：被增强的对象
+
+  * 对UserDao增强，UserDao称为目标
+
+* Weaving：织入，将通知（Advice）应用到目标（Target）的过程
+
+  * 将权限校验方法应用到UserDao的save方法上的过程
+
+* Proxy：代理对象
+
+* Aspect：切面，多个通知和多个切入点组合
+
+
+## Spring的AOP的入门（AspectJ的XML的方式）
+
+### 创建web项目，引入jar包
+
+* 基本开发包
+* aop开发的相关jar包
+
+### 引入Spring的配置文件
+
+* 引入aop的约束
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/aop
+            http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+</beans>
+```
+
+### 编写测试类
+
+* Spring整合Junit单元测试
+  * 需要`spring-test-4.3.18.RELEASE.jar`
+
+```java
+package demo03;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import javax.annotation.Resource;
+
+/**
+ * Created by IntelliJ IDEA.
+ * User: TLX
+ * Date: 2019.4.21
+ * Time: 20:34
+ */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration("classpath:applicationContext.xml")
+public class Test01 {
+
+    @Resource(name = "productDao")
+    private ProductDao productDao;
+
+    @Test
+    public void test01() {
+        productDao.delete();
+        productDao.find();
+        productDao.save();
+        productDao.update();
+    }
+}
+```
+
+### 编写一个切面类
+
+* 编写切面
+
+  ```java
+  public class MyAspectXML {
+      public void checkPri() {
+          System.out.println("========privilege========");
+      }
+  }
+  ```
+
+* 将切面类交给Spring
+
+  ```xml
+  <!--将切面交给Spring管理-->
+  <bean id="myAspect" class="demo03.MyAspectXML"/>
+  ```
+
+### 通过AOP的配置实现
+
+```xml
+<!--通过AOP的配置完成对目标类产生代理-->
+<aop:config>
+    <!--表达式配置哪些类的哪些方法需要增强-->
+    <aop:pointcut id="pointcut1" expression="execution(* demo03.ProductDaoImpl.save(..))"/>
+
+    <!--配置切面-->
+    <aop:aspect ref="myAspect">
+        <aop:before method="checkPri" pointcut-ref="pointcut1"/>
+    </aop:aspect>
+</aop:config>
+```
 
 
 
+## Spring中通知类型
+
+### 前置通知：在目标方法执行之前进行操作
+
+* 前置通知：获得切入点信息
+
+```xml
+<aop:aspect ref="myAspect">
+    <aop:before method="checkPri" pointcut-ref="pointcut1"/>
+</aop:aspect>
+```
+
+### 后置通知：在目标方法执行之后进行操作
+
+* 后置通知：获得方法的返回值
+
+```xml
+<aop:aspect ref="myAspect">
+    <!--前置通知-->
+    <aop:before method="checkPri" pointcut-ref="pointcut1"/>
+    <!--后置通知-->
+    <aop:after-returning method="writeLog" pointcut-ref="pointcut2" returning="result"/>
+</aop:aspect>
+```
+
+### 环绕通知：在目标方法执行之前和之后进行操作
+
+* 环绕通知：可以阻止目标方法执行
+
+```xml
+<aop:aspect ref="myAspect">
+    <!--前置通知-->
+    <aop:before method="checkPri" pointcut-ref="pointcut1"/>
+    <!--后置通知-->
+    <aop:after-returning method="writeLog" pointcut-ref="pointcut2" returning="result"/>
+    <!--环绕通知-->
+    <aop:around method="around" pointcut-ref="pointcut3"/>
+</aop:aspect>
+```
+
+### 异常抛出通知：在程序出现异常的时候，进行的操作
+
+```xml
+<aop:aspect ref="myAspect">
+    <!--前置通知-->
+    <aop:before method="checkPri" pointcut-ref="pointcut1"/>
+    <!--后置通知-->
+    <aop:after-returning method="writeLog" pointcut-ref="pointcut2" returning="result"/>
+    <!--环绕通知-->
+    <aop:around method="around" pointcut-ref="pointcut3"/>
+    <!--异常抛出通知-->
+    <aop:after-throwing method="afterThrowing" pointcut-ref="pointcut4" throwing="exp"/>
+</aop:aspect>
+```
 
 
 
+### 最终通知：无论代码是否有异常，总是会执行
+
+```xml
+<aop:aspect ref="myAspect">
+    <!--前置通知-->
+    <aop:before method="checkPri" pointcut-ref="pointcut1"/>
+    <!--后置通知-->
+    <aop:after-returning method="writeLog" pointcut-ref="pointcut2" returning="result"/>
+    <!--环绕通知-->
+    <aop:around method="around" pointcut-ref="pointcut3"/>
+    <!--异常抛出通知-->
+    <aop:after-throwing method="afterThrowing" pointcut-ref="pointcut4" throwing="exp"/>
+    <!--最终通知-->
+    <aop:after method="after" pointcut-ref="pointcut4"/>
+</aop:aspect>
+```
+
+### 引介通知（不用会）
 
 
 
+## Spring切入点表达式写法
 
+### 切入点表达式语法
 
-
-
-
-
-
-
-
+* 基于execution的函数完成的
+* 语法
+  * [访问修饰符] 方法返回值 包名.类名.方法名（参数）
+    * 除了参数，任何地方都可以用*代替
+  * `public void demo.CustomerDao.save(..)`
+  * `* *.*Dao.save(..)`
+  * `* demo.CustomerDao+.save(..)`
+    * 加号“+”代表当前类和其子类
+  * `* demo..*.*(..)`
+    * 这个包以及子包下的所有类所有方法
 
 
 
