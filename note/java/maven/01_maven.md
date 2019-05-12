@@ -31,7 +31,7 @@
 
 1. 官网下载安装包：http://maven.apache.org/download.cgi
 
-![download.png](img/download.png)
+![download.png](./img/download.png)
 
 2. 解压到非中文无空格目录下
    * bin/
