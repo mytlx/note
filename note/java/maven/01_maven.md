@@ -8,7 +8,7 @@
   - 项目中只包含jar包的坐标，利用坐标到jar包仓库中查找
   - 代码可重用
 
-![依赖管理.png](img/依赖管理.png)
+![依赖管理.png](./img/依赖管理.png)
 
 ## 项目的一键构建
 
@@ -57,19 +57,19 @@
 
 3. 配置环境变量，maven需要 JAVA_HOME
 
-![path01.png](.\img\path01.png)
+![path01.png](./img/path01.png)
 
-![path02.png](.\img\path02.png)
+![path02.png](./img/path02.png)
 
 4. 出现如下图所示，环境变量配置成功
 
-![path03.png](.\img\path03.png)
+![path03.png](./img/path03.png)
 
 
 
 ## 仓库的种类和关系
 
-![repository.png](G:/TLX/Documents/MarkDown/note/java/maven/img/repository.png)
+![repository.png](./img/repository.png)
 
 仓库的种类：
 
@@ -77,7 +77,7 @@
 
   - 配置本地的仓库 settings.xml
 
-    ![localRepository.png](G:/TLX/Documents/MarkDown/note/java/maven/img/localRepository.png)
+    ![localRepository.png](./img/localRepository.png)
 
 - 远程仓库（私服）
 
@@ -85,7 +85,7 @@
 
   - 如果中央仓库下载慢，可以配置成阿里云的maven仓库
 
-    ![mirror.png](G:/TLX/Documents/MarkDown/note/java/maven/img/mirror.png)
+    ![mirror.png](./img/mirror.png)
 
 仓库之间的关系：
 
@@ -205,11 +205,11 @@ maven包含了一个项目对象模型，一组标准集合，一个项目生命
 
 * 配置maven的安装目录，setting目录
 
-![idea_setting01.png](G:\TLX\Documents\MarkDown\note\java\maven\img\idea_setting01.png)
+![idea_setting01.png](./img/idea_setting01.png)
 
 * 配置`-DarchetypeCatalog=internal`，只要联网下载过，就会从本地查找，以后无需联网
 
-![idea_setting02.png](G:\TLX\Documents\MarkDown\note\java\maven\img\idea_setting02.png)
+![idea_setting02.png](./img/idea_setting02.png)
 
 
 
@@ -217,27 +217,27 @@ maven包含了一个项目对象模型，一组标准集合，一个项目生命
 
 * 选择maven项目
 
-![archetype01.png](G:\TLX\Documents\MarkDown\note\java\maven\img\archetype01.png)
+![archetype01.png](./img/archetype01.png)
 
 * 配置maven坐标
 
-![archetype02.png](G:\TLX\Documents\MarkDown\note\java\maven\img\archetype02.png)
+![archetype02.png](./img/archetype02.png)
 
 * 确认maven信息
 
-![archetype03.png](G:\TLX\Documents\MarkDown\note\java\maven\img\archetype03.png)
+![archetype03.png](./img/archetype03.png)
 
 * 配置项目名称和位置等信息
 
-![archetype04.png](G:\TLX\Documents\MarkDown\note\java\maven\img\archetype04.png)
+![archetype04.png](./img/archetype04.png)
 
 * 等待下载完成后，项目创建完毕，此时会有一个小demo可以运行
 
-![archetype05.png](G:\TLX\Documents\MarkDown\note\java\maven\img\archetype05.png)
+![archetype05.png](./img/archetype05.png)
 
 * 创建的项目目录并不完善，需要自己在main目录下创建resources目录，并标记为资源文件目录
 
-![archetype06.png](G:\TLX\Documents\MarkDown\note\java\maven\img\archetype06.png)
+![archetype06.png](./img/archetype06.png)
 
 ## 不使用骨架创建maven的java工程
 

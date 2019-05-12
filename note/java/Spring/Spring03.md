@@ -278,7 +278,7 @@ Spring对持久层也提供了解决方案：ORM模块和**JDBC的模板**。
 
 Spring提供了很多的模板用于简化开发：
 
-![ORM模板.png](file:///G:\TLX\Documents\MarkDown\note\java\Spring\img\ORM模板.png)
+![ORM模板.png](./img/ORM模板.png)
 
 ### JDBC模板使用
 
