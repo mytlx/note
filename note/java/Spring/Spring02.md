@@ -76,7 +76,7 @@ public class UserDaoImpl implements UserDao {
 
 ### @Component：组件
 
-* 修饰一个类，将这个类叫给Spring管理
+* 修饰一个类，将这个类交给Spring管理
 * 这个注解有三个衍生注解（功能类似），修饰类
   * **@Controller：web层**
   * **@Servcie：service层**

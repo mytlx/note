@@ -139,7 +139,8 @@ Spring的源码设计精妙、结构清晰、匠心独运，处处体现着大�
    <?xml version="1.0" encoding="UTF-8"?>
    <beans xmlns="http://www.springframework.org/schema/beans"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+          xsi:schemaLocation="http://www.springframework.org/schema/beans 
+             http://www.springframework.org/schema/beans/spring-beans.xsd">
    
        <bean id="useDao" class="demo01.UserDaoImpl"></bean>
    </beans>
@@ -186,7 +187,7 @@ Spring的源码设计精妙、结构清晰、匠心独运，处处体现着大�
 ### \<bean\>标签的id和name的配置
 
 * id：使用了约束中的唯一约束，里面不能出现特殊字符。
-* name：没有使用约束中的唯一约束理论上可以出现重复的，但是实际开发不能出现的），里面可以出现特殊字符。
+* name：没有使用约束中的唯一约束理论上可以出现重复的，但是实际开发不能出现的，里面可以出现特殊字符。
   * Spring和Struts1框架整合的时候
   * `<bean name="/user" class=""/>`
 
@@ -235,7 +236,6 @@ public class Bean1 {
 public void test01() {
     ApplicationContext applicationContext = new ClassPathXmlApplicationContext("applicationContext.xml");
     Bean1 bean1 = (Bean1) applicationContext.getBean("bean1");
-
 }
 ```
 
@@ -354,7 +354,8 @@ public void test03() {
        <!-- 加上下面这行 -->
        xmlns:p="http://www.springframework.org/schema/p"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd">
 ```
 
 * 使用p名称空间
