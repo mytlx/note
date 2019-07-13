@@ -10,7 +10,9 @@ Vundle是一个vim插件管理器
 
 1. ##### 安装Vundle
 
-   `git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim`
+   ```
+   git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle
+   ```
 
 2. ##### 配置Vundle
 

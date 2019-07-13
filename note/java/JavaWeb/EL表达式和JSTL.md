@@ -141,7 +141,7 @@ JSTL需要两个jar包，**jstl.jar**和**standard.jar**
 
 JSP页面如果需要使用标签库，需要在每个JSP文件的头部包含\<taglib>标签
 
-```
+```jsp
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 ```
 
@@ -161,7 +161,7 @@ JSP页面如果需要使用标签库，需要在每个JSP文件的头部包含\<
 
 核心标签是最常用的JSTL标签。引用核心标签库的语法如下：
 
-```
+```jsp
 <%@ taglib prefix="c" 
            uri="http://java.sun.com/jsp/jstl/core" %>
 ```
