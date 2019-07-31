@@ -25,6 +25,9 @@ public class Url {
 
         StringBuilder sb = new StringBuilder();
 
+        sb.append("[");
+        sb.append(s.substring(0,3));
+        sb.append("]: ");
         sb.append("./");
 
         for (char anA : a) {

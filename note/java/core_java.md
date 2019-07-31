@@ -750,6 +750,14 @@ int n = list.get(i).intValue();
 
 * lambda表达式就是一个代码块，以及必须传入代码的变量规范
 
+* lambda的基本语法：
+
+  ```java
+  (parameters) -> expression		// 箭头后面是表达式
+  // 或（注意语句的花括号）
+  (parameters) -> { statements; }	// 箭头后面是语句
+  ```
+
 * lambda表达式的一种形式：参数，箭头（->）以及一个表达式，如果代码无法放在一个表达式中，可以放在{}中，并包含显式的return语句
 
   ```java
@@ -794,9 +802,94 @@ int n = list.get(i).intValue();
   }
   ```
 
+  
+
+
+> #### 判断下面哪个不是有效的lambda表达式？
+>
+> ```java
+> (1) () -> {}
+> (2) () -> "Raoul"
+> (3) () -> { return "Mario"; }
+> (4) (Integer i) -> return "Alan" + i;
+> (5) (String s) -> { "Iron Man"; }
+> ```
+>
+> * 答案：
+>
+> ```java
+> 只有4和5是无效的lambda表达式。
+> (1) 这个lambda没有参数，并返回void。它类似于主体为空的方法：public void run() {} 
+> (2) 这个lambda没有参数，并返回String作为表达式。
+> (3) 这个lambda没有参数，并返回String（利用显示返回语句）
+> (4) return是一个控制流语句。要使此lambda有效，需要使用花括号，
+> 	如：(Integer i) -> { return "Alan" + i; }
+> (5) "Iron Man"是一个表达式，不是一个语句。要使此lambda有效，可以去除花括号和分号，
+> 	如：(String s) -> "Iron Man"。
+> 	还可以使用显示返回语句，
+> 	如：(String s) -> { return "Iron Man"; }
+> ```
+>
+
+  
+
+
+> #### 一些lambda的例子和使用案例
+>
+> ```java
+> // 布尔表达式
+> (List<String> list) -> list.isEmpty();
+> // 创建对象
+> () -> new Apple(10)；
+> // 消费一个对象
+> (Apple a) -> {
+> 	System.out.println(a.getWeight());
+> }
+> // 从一个对象中选择/抽取
+> (String s) -> s.length();
+> // 组合两个值
+> (int a, int b) -> a * b;
+> // 比较两个对象
+> (Apple a1, Apple a2) -> a1.getWeight().compareTo(a2.getWeight());
+> ```
+>
+
+
+
 ### 函数式接口
 
-* 对于只有一个抽象方法的接口，需要这种接口的对象时，就可以提供一个lambda表达式，这种接口称为**函数式接口（functional interface）**  
+* 对于**只有一个抽象方法的接口**，需要这种接口的对象时，就可以提供一个lambda表达式，这种接口称为**函数式接口（functional interface）**  
+
+  ```java
+  public interface Predicate<T> {
+      boolean test(T t);
+  }
+  ```
+
+* 接口可以拥有默认方法，但是哪怕有很多**默认方法**，只要接口定义了一个**抽象方法**，就仍然还是一个函数式接口
+
+> #### 判断下面哪些接口是函数式接口？
+>
+> ```java
+> public interface Adder {
+>     int add(int a, int b);
+> }
+> 
+> public interface SmartAdder extends Adder {
+>     int add(double a, double b);
+> }
+> 
+> public interface Nothing {
+> }
+> ```
+>
+> 答案：只有Adder是函数式接口。
+>
+> SmartAdder不是函数式接口，因为它定义了两个叫做add的抽象方法（其中一个是从Adder那里继承过来的）。
+>
+> Nothing也不是函数式接口，因为它没有声明抽象方法。
+
+
 
 ### 方法引用（method reference）
 
@@ -808,13 +901,13 @@ Timer t = new Timer(1000, System.out::println);	// 方法引用，等价于lambd
 
 用::操作符分隔方法名与对象或类名，主要有三种情况：
 
-1. object::instanceMethod（object实例方法）
+1. `object::instanceMethod`（object实例方法）
    * 等价于提供方法参数的lambda表达式
    * `System.out::println`等价于``x -> System.out.println(x)``
-2. Class::staticMethod（静态方法）
+2. `Class::staticMethod`（静态方法）
    * 等价于提供方法参数的lambda表达式
    * `Math::pow`等价于``(x, y) -> Math.pow(x, y)``
-3. Class::instanceMethod（普通实例方法）
+3. `Class::instanceMethod`（普通实例方法）
    * 第一个参数会成为方法的目标
    * `String::compareToIgnoreCase`等价于`(x, y) -> x.compareToIgnoreCase(y)`
 
