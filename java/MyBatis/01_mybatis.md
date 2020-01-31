@@ -9,6 +9,56 @@
   * \${}可以接收简单类型值或pojo属性值
   * 如果parameterType传输单个简单类型值，\${}括号中只能是value。
 
+> 以下引用自文档：
+
+默认情况下,使用 `#{}` 格式的语法会导致 MyBatis 创建 `PreparedStatement` 参数占位符并安全地设置参数（就像使用 ? 一样）。 这样做更安全，更迅速，通常也是首选做法，不过有时你就是想直接在 SQL 语句中插入一个不转义的字符串。 比如，像 ORDER BY，你可以这样来使用：
+
+```java
+ORDER BY ${columnName}
+```
+
+这里 MyBatis 不会修改或转义字符串。
+
+当 SQL 语句中的元数据（如表名或列名）是动态生成的时候，字符串替换将会非常有用。 举个例子，如果你想通过任何一列从表中 `select` 数据时，不需要像下面这样写：
+
+```java
+@Select("select * from user where id = #{id}")
+User findById(@Param("id") long id);
+
+@Select("select * from user where name = #{name}")
+User findByName(@Param("name") String name);
+
+@Select("select * from user where email = #{email}")
+User findByEmail(@Param("email") String email);
+
+// and more "findByXxx" method
+```
+
+可以只写这样一个方法：
+
+```java
+@Select("select * from user where ${column} = #{value}")
+User findByColumn(@Param("column") String column, @Param("value") String value);
+```
+
+其中 `${column}`   会被直接替换，而  `#{value} `会被使用 `?`  预处理。 因此你就可以像下面这样来达到上述功能： 
+
+```java
+User userOfId1 = userMapper.findByColumn("id", 1L);
+User userOfNameKid = userMapper.findByColumn("name", "kid");
+User userOfEmail = userMapper.findByColumn("email", "noone@nowhere.com");
+```
+
+这个想法也同样适用于用来替换表名的情况。
+
+**提示** 用这种方式接受用户的输入，并将其用于语句中的参数是不安全的，会导致潜在的 SQL 注入攻击，因此要么不允许用户输入这些字段，要么自行转义并检验。
+
+---
+
+
+
+
+
 ### parameterType和resultType
 
 * parameterType：指定输入参数类型，mybatis通过ognl从输入对象中获取参数值拼接在sql中。
